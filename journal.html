@@ -42,6 +42,18 @@
   <strong>Art generation, at a glance:</strong> all Duckdoku art was made with OpenAI's image API (<code>gpt-image-2</code> for the main art, <code>gpt-image-1</code> for a couple of later images), <strong>medium quality</strong>, generated close to <strong>1080p</strong> (1920&times;1088, the nearest size the tool allows). Images came back as <strong>sprite sheets</strong> &mdash; several poses in one picture &mdash; and were cut into the individual images the game uses.
 </div>
 
+<div class="note">
+  <strong>Sound and visual effect packages used</strong> (all from the Unity Asset Store, plus a couple of custom lines):
+  <ul>
+    <li>Ultimate Casual Game SFX and Music Pack</li>
+    <li>Gamemaster Audio &mdash; Fun Casual Sounds</li>
+    <li>A few custom sound effects made with ElevenLabs</li>
+    <li>Hyper Casual FX (Lana Studio)</li>
+    <li>Cartoon FX Remaster (JMO Assets)</li>
+    <li>DOTween, for animation</li>
+  </ul>
+</div>
+
 <h2>Example prompts I used</h2>
 <p>These are real prompts, copied straight from my own notes, not re-written for this page.</p>
 
@@ -145,7 +157,7 @@ A logo and splash sheet: on the left, a large 3D bubble-letter logo reading exac
 <h3>Day 2: Sound (and a scare)</h3>
 <p>I bought the <strong>Ultimate Casual Game SFX and Music Pack</strong> on the Unity Asset Store. I told Unity to import it, and that was a mistake: the pack is <strong>5.6 GB</strong> and Unity started copying all of it into my project. My disk was filling up, and Unity froze for many minutes. I closed Unity, moved the project to a bigger drive, and reopened it.</p>
 <p>Lesson: <strong>look at the size of a package before you import it.</strong> Then I opened the package file myself and picked only <strong>13 sounds</strong> (about 14 MB). They are in <code>Assets/Resources/Audio</code>:</p>
-<div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Where it plays</th></tr></thead><tbody><tr><td><code>place_duck</code>, <code>place_duck_b</code></td><td>placing a duck. A random quack, with a random pitch each time so it never sounds the same</td></tr><tr><td><code>tap_cross</code></td><td>crossing out a cell</td></tr><tr><td><code>wrong</code></td><td>wrong duck, lose a heart</td></tr><tr><td><code>win</code> and <code>coins</code></td><td>Bravo screen</td></tr><tr><td><code>hint</code></td><td>hint bulb</td></tr><tr><td><code>helper_fly</code></td><td>helper duck flies in</td></tr><tr><td><code>button</code></td><td>every button</td></tr><tr><td><code>streak</code></td><td>streak screen</td></tr><tr><td><code>music_menu</code>, <code>music_game</code></td><td>background music (kalimba loops)</td></tr></tbody></table></div>
+<p>I picked 13 sounds from the pack to cover the game's actions and screens: placing a duck, crossing out a cell, a mistake, winning, a hint, the helper duck, buttons, the streak page, and background music.</p>
 <p>I cannot hear the sounds while I build, so I chose the quack by its name and length. <strong>I need to listen and swap it if it sounds like a car horn, not a duck.</strong> To change a sound, I only replace the file with the same name.</p>
 <hr>
 <h3>Day 2: Building the game in Unity</h3>
@@ -236,10 +248,10 @@ A logo and splash sheet: on the left, a large 3D bubble-letter logo reading exac
 <h4>5. Was the economy from the GPT chat built?</h4>
 <p><strong>Partly.</strong> Here is the honest list.</p>
 <div class="tbl-wrap"><table><thead><tr><th>From the chat</th><th>Done?</th></tr></thead><tbody><tr><td>Reward = play minutes x income per minute (100 coins per minute at 4x4, grows with board size)</td><td>Yes</td></tr><tr><td>Hint costs 100 coins after the free ones, helper duck: 3 free a day, then 100 coins</td><td>Yes</td></tr><tr><td>Continue after losing = 200 coins (2 minutes)</td><td>Yes</td></tr><tr><td>Daily puzzle bonus (+200)</td><td>Yes</td></tr><tr><td><strong>Stars: +5% / +10% / +15% bonus</strong> (3 stars = no mistakes)</td><td><strong>Yes, new today</strong></td></tr><tr><td><strong>Streak rewards: day 7 = 1,500, day 14 = 3,000, day 30 = 7,500 coins</strong></td><td><strong>Yes, new today</strong></td></tr><tr><td><strong>Cosmetic prices: avatars cost 1,000 to 6,000 coins</strong> (10 to 60 minutes of play)</td><td><strong>Yes, new today</strong></td></tr><tr><td>Income growing by world (100, 110, 120, 135 ...)</td><td>Only a simple version (grows with board size)</td></tr><tr><td>XP and levels</td><td>No</td></tr><tr><td>Rewarded ads</td><td>No (needs an ads SDK)</td></tr></tbody></table></div>
-<h4>6. Effects from the Hyper Casual FX pack</h4>
-<p>The pack was only 0.9 MB, so I imported it after checking its size (lesson from the sound pack). I use its <strong>confetti</strong> on the Bravo page, the streak page and the tutorial end, and its <strong>sparkle</strong> and <strong>flash</strong> on placing ducks and hints. I also use three effects from the Cartoon FX pack: <em>magic poof</em> (helper duck), <em>broken heart</em> (a mistake), <em>falling stars</em>.</p>
+<h4>6. Effects from asset packs</h4>
+<p>The pack was only 0.9 MB, so I imported it after checking its size (lesson from the sound pack). I use a mix of effects from the Hyper Casual FX pack and the Cartoon FX Remaster pack throughout the game.</p>
 <h4>7. A test page for every sound and effect</h4>
-<p><strong>Settings &gt; Test SFX &amp; VFX.</strong> One button for every game sound (12) and every effect (14): confetti, sparkle, flash, shine, poof, falling stars, broken heart, flying coins, number count-up, duck winks, duck wins, duck loses, screen shake.</p>
+<p><strong>Settings &gt; Test SFX &amp; VFX.</strong> A hidden developer page with one button for every game sound and every visual effect, so I could preview each one on its own without playing through the whole game.</p>
 <h4>8. New duck animations (sprite sheets)</h4>
 <p>I generated two more sheets with the same duck: a <strong>6-frame victory jump</strong> and a <strong>6-frame crying</strong> animation. The Bravo page and the lose page play them.</p>
 <h4>9. New logo, icon, splash and featured image</h4>
@@ -251,7 +263,7 @@ A logo and splash sheet: on the left, a large 3D bubble-letter logo reading exac
 <li><strong>Start-up order:</strong> icon (pops in with sparkles) -&gt; splash -&gt; tutorial (first time only) -&gt; home.</li>
 </ul>
 <h4>10. DOTween everywhere</h4>
-<p>DOTween now animates: button presses, popups, the icon and splash, the home screen entrance, ducks popping in, crosses spinning in, hearts breaking, the tutorial hand and tap ripples, the helper duck flying in, the score counting up, <strong>coins flying into the coin counter</strong>, stars popping, the streak number counting up, the tracker icons, the hint glow, screen shake, floating logo and duck. I removed my old hand-made animation code.</p>
+<p>I used <strong>DOTween</strong> for the game's animations. I removed my old hand-made animation code.</p>
 <h4>Image cost (real numbers from the API log)</h4>
 <p>The API tells me how many tokens each image used. Output tokens cost $30 per million, and this matches your price table (1,325 tokens = $0.040, and the table says $0.041 for 1536x1024).</p>
 <div class="tbl-wrap"><table><thead><tr><th>Batch</th><th>Images</th><th>Estimated cost</th></tr></thead><tbody><tr><td>First 7 sprite sheets</td><td>7</td><td>about $0.34</td></tr><tr><td>Logo, win sheet, lose sheet, icon, splash, featured</td><td>6</td><td>about $0.32</td></tr><tr><td><strong>Total</strong></td><td><strong>13</strong></td><td><strong>about $0.66 (budget was $1)</strong></td></tr></tbody></table></div>
@@ -306,8 +318,7 @@ A logo and splash sheet: on the left, a large 3D bubble-letter logo reading exac
 <hr>
 <h3>Day 5: A real level plan, and more polish</h3>
 <h4>New sounds you picked</h4>
-<div class="tbl-wrap"><table><thead><tr><th>Where</th><th>Sound (from the pack)</th></tr></thead><tbody><tr><td>Level complete</td><td>Casino <code>WinningFanfare03</code></td></tr><tr><td>Close a menu</td><td>Candy <code>Closing_menue01</code></td></tr><tr><td>Open a menu</td><td>Candy <code>Open_menue07</code></td></tr><tr><td>Helper duck button</td><td>Candy <code>Bing05-01</code></td></tr><tr><td>Hint bulb</td><td>Candy <code>Bing06-01</code></td></tr><tr><td>Music (home <strong>and</strong> game)</td><td><code>Song01Kalimba</code>, the same song on both, so it never restarts</td></tr></tbody></table></div>
-<p><code>Bing05</code>, <code>Bing06</code> and <code>Song01Kalimba</code> exist in more than one folder of the pack. I used the Candy versions of the Bings, and the CuteAndFunnyLoops version of the song (the one the home page already used). If I picked the wrong copy, I only need the folder name.</p>
+<p>I picked more specific sounds from the pack for a handful of moments, and set the home screen and the game to share one background music loop, so it never restarts between screens.</p>
 <h4>Screens</h4>
 <ul>
 <li><strong>Complete:</strong> the banner is now one flat green, with no darker green layers.</li>
@@ -345,7 +356,7 @@ A logo and splash sheet: on the left, a large 3D bubble-letter logo reading exac
 <hr>
 <h3>Day 6: Fixes, a restart button, and the shop</h3>
 <ul>
-<li><strong>Music:</strong> home and game both play <code>Song01Kalimba</code> from the <strong>Puzzle &amp; Thinking Game Music Loops</strong> folder (I had used the Cute &amp; Funny copy before).</li>
+<li><strong>Music:</strong> home and game now play the same music track, from the same asset pack folder (I had two different copies of it playing before).</li>
 <li><strong>Restart button:</strong> new round button in the bottom row (Undo, Restart, Helper, Hint). It asks "Restart level?" first, so a wrong tap does not wipe the board.</li>
 <li><strong>Bug: crossing out every cell kept 3 hearts.</strong> Crossing out the cell where a duck belongs is now a <strong>mistake</strong> and costs a heart, like a wrong duck. The game waits about 1.1 seconds before it counts, because a double-tap starts with a cross on that same cell. Tested: a lone cross costs a heart, a slow double-tap still places the duck.</li>
 <li><strong>Keep playing</strong> button is green.</li>
