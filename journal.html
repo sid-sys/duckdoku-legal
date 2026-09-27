@@ -27,6 +27,8 @@
   th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; font-size:.94rem}
   th{background:#f6e9d0; color:var(--brown)}
   .note{background:#fff; border:1px dashed var(--line); border-radius:10px; padding:14px 18px; font-size:.94rem; margin:18px 0}
+  .promptbox{background:#fff; border:1px solid var(--line); border-left:4px solid var(--orange); border-radius:0 10px 10px 0; padding:14px 18px; margin:12px 0; font-size:.92rem; white-space:pre-wrap; font-family:ui-monospace,Consolas,monospace; color:var(--brown)}
+  .prompt-name{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif; font-weight:bold; color:var(--orange-dark); margin-top:18px}
   footer{text-align:center; color:#9c8360; font-size:.85rem; margin-top:50px}
 </style>
 </head>
@@ -39,6 +41,40 @@
 <div class="note">
   <strong>Art generation, at a glance:</strong> all Duckdoku art was made with OpenAI's image API (<code>gpt-image-2</code> for the main art, <code>gpt-image-1</code> for a couple of later images), <strong>medium quality</strong>, generated close to <strong>1080p</strong> (1920&times;1088, the nearest size the tool allows). Images came back as <strong>sprite sheets</strong> &mdash; several poses in one picture &mdash; and were cut into the individual images the game uses.
 </div>
+
+<h2>Example prompts I used</h2>
+<p>These are real prompts, copied straight from my own notes, not re-written for this page.</p>
+
+<p class="prompt-name">Sheet 1 &mdash; duck faces (8 poses, one sheet)</p>
+<div class="promptbox">A game sprite sheet on a perfectly flat, solid pure magenta (#FF00FF) background, 1920x1088, for a cute mobile puzzle game called Duckdoku. A 4 columns x 2 rows grid of 8 separate poses of the SAME character head, each centered in its own equal cell with wide empty magenta space between them, nothing touching, no text, no labels, no borders.
+
+Character: a chubby, round, fluffy 3D-rendered duck HEAD (head only, no body). Soft glossy Pixar-style 3D render, smooth clay-like materials, soft studio lighting, clean edges. White-and-butter-yellow feathers, a small orange flat beak, big round glossy dark eyes with white highlights, tiny cheek blush, small feather tuft on top. Cute, friendly, slightly goofy. Exactly the same character and same size in every cell, the head fills about 70% of the cell height.
+
+Poses, left to right, top row then bottom row:
+1. Looking straight at the viewer, calm, mouth closed.
+2. Eyes looking to the top-left, head slightly turned to the top-left.
+3. Eyes looking to the top-right, head slightly turned to the top-right.
+4. Winking at the viewer with the LEFT eye closed, tiny happy smile.
+5. Winking at the viewer with the RIGHT eye closed, tiny happy smile.
+6. Very happy, eyes closed in joy, beak open in a smile.
+7. Sad and worried, eyes looking down, small tear.
+8. Sleepy, eyes half closed.</div>
+<p style="font-size:.85rem;color:#9c8360">The flat magenta background was a trick: my cutting script turned every magenta pixel transparent automatically, so I never had to manually erase a background.</p>
+
+<p class="prompt-name">Logo and splash sheet</p>
+<div class="promptbox">Game sprite sheet on a perfectly flat solid pure magenta (#FF00FF) background, 1920x1088, for the cute mobile puzzle game Duckdoku. Every item sits in its own equal grid cell with wide empty magenta space around it, nothing touching or overlapping, no text unless stated, no borders, no drop shadow onto the background. Art style: glossy soft 3D-rendered Pixar-like look, smooth clay-like materials, soft studio lighting, warm cozy palette (cream, orange #F0931F, soft yellow, teal, pink, deep brown). The duck must be EXACTLY the same character as in the attached reference sheet: chubby round fluffy white-and-butter-yellow duck, small orange flat beak, big glossy dark eyes, pink cheek blush, small feather tuft on top.
+A logo and splash sheet: on the left, a large 3D bubble-letter logo reading exactly DUCKDOKU in glossy orange (#F0931F) and cream letters with a subtle thick outline, where the letter O in DUCK has a little duck head peeking out of it; below the logo a small tagline reading exactly "Think. Place. Solve." in soft brown. On the right, a tall wide splash illustration of the duck sitting happily on a small rounded 4x4 coloured puzzle grid (teal, orange, pink, green tiles) with sparkles.</div>
+
+<p class="prompt-name">App icon (later, 3D version)</p>
+<div class="promptbox">App icon, square, 1024x1024, full bleed, no border, no text. Background: a 3D glossy diagonal split, top-right a glossy raised orange 3D panel, bottom-left a glossy raised deep purple 3D panel, both with visible thick rounded 3D grid lines like raised sudoku tile borders and soft drop shadows between panels, giving a real depth and bevel look. In the top-right orange panel a small chunky 3D white rounded X-shaped tile icon with its own drop shadow, sitting slightly above the surface. Centered and large, covering most of the icon: a fully 3D rendered pixar-style baby duck head, realistic soft fluffy fur shading, glossy big brown eyes with catchlight, glossy orange beak with a warm smile, soft rim light and ambient occlusion, the duck sits forward with a drop shadow onto the panels behind it, strong sense of 3D volume and depth like a modern 3D mobile game icon. Bright, polished, high-detail 3D render, no flat shapes, no text, no watermark.</div>
+
+<p class="prompt-name">Featured graphic (Play Store banner)</p>
+<div class="promptbox">Mobile game store featured graphic, 1536x1024 landscape banner. Warm cream background with soft orange glow. Top-left game logo text: bold rounded playful cartoon letters spelling DUCKDOKU, yellow and orange colors with a thin brown outline, small star decoration near the logo. Center-left: a bright colorful sudoku-style grid board tilted slightly, made of rounded square tiles in soft pastel colors (blue, yellow, pink, teal, purple, green), some tiles have a white X mark, a couple of tiles have a small cute cartoon duck face sticker on them. Right side: one large adorable 3D pixar-style baby duck character, yellow fluffy feathers, big brown sparkly eyes, big rounded beak, giving a thumbs-up with a wing, waving with the other wing, big friendly smile, sitting beside the grid. Bottom: a colorful rounded pill-shaped banner with bold white text outlined in orange reading Sudoku without Numbers. Bright, cheerful, polished 3D mobile game art style, high detail, soft shadows, vibrant colors.</div>
+
+<p class="prompt-name">Background swap (an edit, not a fresh generation &mdash; kept the same duck, only changed what's behind it)</p>
+<div class="promptbox">Keep the cute 3D fluffy baby duck exactly the same, same pose, same face, same lighting. Replace only the background: a colorful sudoku-style puzzle grid board made of rounded square tiles in soft pastel colors (blue, yellow, pink, teal, purple, green), some tiles have a white X mark, seen at a slight angle, warm soft glow behind it, a few small sparkle stars floating around. Bright cheerful 3D mobile game art style.</div>
+
+<hr>
 
 <h2>Duckdoku: building a game in public</h2>
 <p><em>A puzzle game where you place one duck in every color, row and column, and ducks can't touch. I am building it from a single idea to a polished game, and I am writing down every step.</em></p>
