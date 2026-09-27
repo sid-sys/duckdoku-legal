@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Duckdoku: the full day-by-day journal</title>
+<style>
+  :root{ --bg:#fff3dc; --card:#fffaf0; --ink:#3b2a1a; --brown:#6b4a2b; --orange:#e8891c; --orange-dark:#c46a00; --line:#f0dcb8; }
+  *{box-sizing:border-box}
+  body{ font-family:-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif; max-width:820px; margin:0 auto; padding:0 18px 60px; line-height:1.65; color:var(--ink); background:var(--bg); }
+  header{padding:36px 0 10px; text-align:center}
+  header a.back{display:inline-block; margin-bottom:14px; font-size:14px; color:var(--orange-dark); text-decoration:none}
+  h1{color:var(--orange); font-size:1.9rem; margin:6px 0 6px}
+  h2{color:var(--orange-dark); margin-top:40px; border-bottom:2px solid var(--line); padding-bottom:6px; font-size:1.5rem}
+  h3{color:var(--orange-dark); margin-top:32px; font-size:1.2rem}
+  h4{color:var(--brown); margin-top:22px; font-size:1.05rem}
+  p{margin:12px 0}
+  a{color:var(--orange-dark)}
+  code{background:#f6e9d0; padding:2px 6px; border-radius:6px; font-size:.92em}
+  ul,ol{padding-left:22px}
+  li{margin:4px 0}
+  hr{border:none; border-top:2px solid var(--line); margin:34px 0}
+  blockquote{background:#fff; border-left:4px solid var(--orange); margin:16px 0; padding:10px 16px; border-radius:0 10px 10px 0; color:var(--brown)}
+  img{max-width:100%; border-radius:10px; border:1px solid var(--line); margin:8px 0; display:block}
+  .tbl-wrap{overflow-x:auto; margin:14px 0}
+  table{border-collapse:collapse; width:100%; background:#fff; border-radius:10px; overflow:hidden}
+  th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; font-size:.94rem}
+  th{background:#f6e9d0; color:var(--brown)}
+  .note{background:#fff; border:1px dashed var(--line); border-radius:10px; padding:14px 18px; font-size:.94rem; margin:18px 0}
+  footer{text-align:center; color:#9c8360; font-size:.85rem; margin-top:50px}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="devlog.html">&larr; Back to the short version</a>
+  <h1>🦆 Duckdoku: the full day-by-day journal</h1>
+</header>
+
+<div class="note">
+  <strong>Art generation, at a glance:</strong> all Duckdoku art was made with OpenAI's image API (<code>gpt-image-2</code> for the main art, <code>gpt-image-1</code> for a couple of later images), <strong>medium quality</strong>, generated close to <strong>1080p</strong> (1920&times;1088, the nearest size the tool allows). Images came back as <strong>sprite sheets</strong> &mdash; several poses in one picture &mdash; and were cut into the individual images the game uses.
+</div>
+
+<h2>Duckdoku: building a game in public</h2>
+<p><em>A puzzle game where you place one duck in every color, row and column, and ducks can't touch. I am building it from a single idea to a polished game, and I am writing down every step.</em></p>
+<hr>
+<h3>Day 1: From a chat to a plan</h3>
+<h4>The idea</h4>
+<p>I love the cat puzzle game <strong>Meowdoku</strong> by Oakever Games. I wanted to know: can I build my own version, with my own theme and my own art? I asked ChatGPT.</p>
+<p>The answer was: copy the <strong>mechanics</strong> (the rules), not the <strong>assets</strong> (art, sounds, levels). So I chose ducks instead of cats, and the name <strong>Duckdoku</strong>.</p>
+<p>I kept four ChatGPT chats, in order. They are my design notes:</p>
+<ol>
+<li><strong>Clone game mechanics.</strong> Rules, puzzle generator, screens, ads, coins, streaks.</li>
+<li><strong>Player Income per Minute (IPM).</strong> A way to set every price and reward from "how many minutes of play is this worth?"</li>
+<li><strong>Hints and the name.</strong> Three kinds of hints. Names like Capydoku, Foxdoku... I chose <strong>Duckdoku</strong>.</li>
+<li><strong>The duck helper.</strong> A duck button that flies onto the board and places one correct duck.</li>
+</ol>
+<h4>The rules of Duckdoku</h4>
+<ul>
+<li>The board has colored areas. Every color must get exactly <strong>one duck</strong>.</li>
+<li>One duck per <strong>row</strong> and one per <strong>column</strong>.</li>
+<li>Ducks <strong>cannot touch</strong>, not even on the corner.</li>
+<li>You have <strong>3 hearts</strong>. A wrong duck costs a heart.</li>
+<li><strong>Tap</strong> a cell once to cross it out. <strong>Double-tap</strong> to place a duck.</li>
+</ul>
+<h4>My reference screenshots</h4>
+<p>I took 23 screenshots of Meowdoku: the splash, the tutorial, the grid, the hint bar, the profile, the daily streak and the "Bravo" win screen. They are my style guide. I replace every cat with a duck.</p>
+<blockquote>One thing I checked before building: the shared chat and my screenshots did not match on the animal (chat: ducks, screenshots: cats). That is expected. The screenshots are what I copy, the chat is what I build. I also noticed that the chat says the cat is "2D with 3D-style parts", while I see it as a 3D cat. So I made the <strong>duck a 3D-looking picture inside a 2D game</strong>.</blockquote>
+<h4>The 3D duck idea</h4>
+<p>In the reference, the cat looks to the top-left or top-right, and sometimes winks at you. It also winks when you place it on the grid. My game is 2D, but my duck is a 3D render. To get this feeling, I swap between rendered poses:</p>
+<p><code>straight -&gt; look top-left / top-right -&gt; back -&gt; (sometimes) wink</code></p>
+<hr>
+<h3>Day 1: Making the art (and what it cost)</h3>
+<h4>Price check</h4>
+<p>I saved a screenshot of the OpenAI price table (<code>gptprice.png</code>). For <strong>GPT Image 2, medium quality</strong>:</p>
+<div class="tbl-wrap"><table><thead><tr><th>Size</th><th>Price</th></tr></thead><tbody><tr><td>1024 x 1024</td><td>$0.053</td></tr><tr><td>1024 x 1536</td><td>$0.041</td></tr><tr><td>1536 x 1024</td><td>$0.041</td></tr></tbody></table></div>
+<p>I wanted <strong>1080p</strong>. That is 1920 x 1080. The tool needs sizes that divide by 16, and 1080 does not, so I used <strong>1920 x 1088</strong>. That has about 33% more pixels than 1536 x 1024, so I guessed <strong>about $0.055 per sheet</strong>.</p>
+<h4>Sprite sheets, not single images</h4>
+<p>Making 58 separate images would cost far more. So I asked for <strong>7 sprite sheets</strong>, one image each, and cut them into pieces myself with a small Python script.</p>
+<div class="tbl-wrap"><table><thead><tr><th>#</th><th>Sheet</th><th>Contents</th></tr></thead><tbody><tr><td>1</td><td>Duck faces</td><td>8 poses: straight, look top-left, look top-right, wink left, wink right, happy, sad, sleepy</td></tr><tr><td>2</td><td>Dance and win</td><td>6 dance poses with party hat and glow sticks</td></tr><tr><td>3</td><td>Duck actions</td><td>wave, thumbs up, flying helper, detective, golden duck, thinking</td></tr><tr><td>4</td><td>UI kit</td><td>buttons, panels, hearts, coins, X marks, bulb, stars, hand, check</td></tr><tr><td>5</td><td>Streak and rewards</td><td>feather-nest streak icon (on / off), gift box, day markers, treasure chest</td></tr><tr><td>6</td><td>Avatars</td><td>8 duck profile pictures</td></tr><tr><td>7</td><td>Logo and splash</td><td>DUCKDOKU logo and the splash duck</td></tr></tbody></table></div>
+<p>I made <strong>sheet 1 first</strong> and checked it. It looked right, so I used it as the <strong>reference picture</strong> for the other sheets. That is how the duck stays the same duck in every sheet.</p>
+<p>One trick: I asked for a flat <strong>magenta</strong> background. Then my script turns magenta into see-through pixels.</p>
+<h4>Cost</h4>
+<ul>
+<li>Budget I set: <strong>up to $1</strong>.</li>
+<li>Image calls made: <strong>8</strong> (7 sheets, plus 1 retry because sheet 6 hit a rate limit and made no image).</li>
+<li>My estimate: <strong>about $0.055 x 7 = about $0.39</strong>.</li>
+<li>I will compare this with the real number on the OpenAI billing page and correct it here.</li>
+</ul>
+<p><em>(sprite sheets: see <code>Assets/Art/Sheets</code>, cut sprites: <code>Assets/Resources/Sprites</code>)</em></p>
+<h4>What was not perfect</h4>
+<ul>
+<li>In the logo, the duck head covers the letter <strong>C</strong>, so it reads like "DU(duck)KDOKU". I will fix that later.</li>
+<li>The font I use for now is <em>Arial Rounded MT Bold</em> from Windows. It looks close to the reference, but I must swap it for a free font before I release.</li>
+</ul>
+<hr>
+<h3>Day 1: The puzzle engine</h3>
+<p>I built the brain of the game before any screens. Three parts:</p>
+<ol>
+<li><strong>Generator.</strong> It places ducks so no two touch, grows colored areas around them, then checks the puzzle has <strong>exactly one answer</strong>. If not, it tries again. The same level number always gives the same puzzle.</li>
+<li><strong>Solver.</strong> Counts solutions, up to 2. This is how I know a puzzle is fair.</li>
+<li><strong>Board.</strong> Holds the state: crosses, ducks, hearts, score, undo, hints, helper.</li>
+</ol>
+<h4>Hints</h4>
+<p>The hint bulb finds a real deduction and says it in words, like <em>"This color has only one place left!"</em> Then it glows the color and shows a hand on the cell.</p>
+<h4>Money (from my IPM chat)</h4>
+<p>Reward = expected solve minutes x income per minute.</p>
+<p>4x4 = 100 coins/min, and it grows with board size. A hint or a helper duck costs 100 coins once free ones run out. You get <strong>3 free helper ducks per day</strong>.</p>
+<hr>
+<h3>Day 2: Sound (and a scare)</h3>
+<p>I bought the <strong>Ultimate Casual Game SFX and Music Pack</strong> on the Unity Asset Store. I told Unity to import it, and that was a mistake: the pack is <strong>5.6 GB</strong> and Unity started copying all of it into my project. My disk was filling up, and Unity froze for many minutes. I closed Unity, moved the project to a bigger drive, and reopened it.</p>
+<p>Lesson: <strong>look at the size of a package before you import it.</strong> Then I opened the package file myself and picked only <strong>13 sounds</strong> (about 14 MB). They are in <code>Assets/Resources/Audio</code>:</p>
+<div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Where it plays</th></tr></thead><tbody><tr><td><code>place_duck</code>, <code>place_duck_b</code></td><td>placing a duck. A random quack, with a random pitch each time so it never sounds the same</td></tr><tr><td><code>tap_cross</code></td><td>crossing out a cell</td></tr><tr><td><code>wrong</code></td><td>wrong duck, lose a heart</td></tr><tr><td><code>win</code> and <code>coins</code></td><td>Bravo screen</td></tr><tr><td><code>hint</code></td><td>hint bulb</td></tr><tr><td><code>helper_fly</code></td><td>helper duck flies in</td></tr><tr><td><code>button</code></td><td>every button</td></tr><tr><td><code>streak</code></td><td>streak screen</td></tr><tr><td><code>music_menu</code>, <code>music_game</code></td><td>background music (kalimba loops)</td></tr></tbody></table></div>
+<p>I cannot hear the sounds while I build, so I chose the quack by its name and length. <strong>I need to listen and swap it if it sounds like a car horn, not a duck.</strong> To change a sound, I only replace the file with the same name.</p>
+<hr>
+<h3>Day 2: Building the game in Unity</h3>
+<h4>How it is built</h4>
+<p>The whole UI is built from code when the game starts. One empty object in the scene, <code>Duckdoku</code>, holds a script called <code>GameApp</code>. It makes the canvas, the menu, the game screen and the popups. This keeps everything easy to change, and the Hierarchy is still fully visible while playing.</p>
+<h4>Screens I made (all copied from the reference, with ducks)</h4>
+<ol>
+<li><strong>Splash.</strong> The logo and the duck pop in.</li>
+<li><strong>Menu.</strong> Profile picture, coins, settings, streak, logo, Play, Daily Challenge.</li>
+<li><strong>Game screen.</strong> Level, score, 3 hearts, a row of duck icons (one per color), the three rules, a coach message, the board, and three buttons: Undo, Helper duck, Hint.</li>
+<li><strong>Bravo screen.</strong> A dancing duck with glow sticks, confetti, and the coin reward.</li>
+<li><strong>Lose screen.</strong> A sad duck. Try again, or continue for 200 coins.</li>
+<li><strong>Streak screen.</strong> The feather nest, current and best streak, and the 7-day row with a gift at the end.</li>
+<li><strong>Profile</strong> with 8 duck avatars, and <strong>Settings</strong> with a Sound switch.</li>
+</ol>
+<h4>The duck that winks</h4>
+<p>The board duck is a picture, but it acts alive:</p>
+<ul>
+<li>Every 2 to 5 seconds it looks to the <strong>top-left or top-right</strong>, waits, looks back, and <strong>sometimes winks</strong> at me.</li>
+<li>When I place a duck, it <strong>winks right away</strong> and pops in.</li>
+<li>On the Bravo screen all ducks cheer.</li>
+</ul>
+<h4>Test results</h4>
+<p>I tested the rules by playing through with code, not just by looking:</p>
+<ul>
+<li>Wrong duck: loses a heart, the cell gets crossed out, the cell shakes. <strong>Works.</strong></li>
+<li>Cross-out and double-tap placing. <strong>Works.</strong></li>
+<li>Hint: says <em>"This color has only one place left!"</em> and the hand points at the <strong>right</strong> cell. <strong>Works.</strong></li>
+<li>Win: coins, score, next level and streak all update. <strong>Works.</strong></li>
+<li><strong>Puzzle generator:</strong> 25 puzzles for each size, checked to have exactly one answer.</li>
+</ul>
+<div class="tbl-wrap"><table><thead><tr><th>Size</th><th>Puzzles with exactly one answer</th><th>Speed</th></tr></thead><tbody><tr><td>4x4 to 7x7</td><td>25 of 25</td><td>under 0.1 second</td></tr><tr><td>8x8</td><td>25 of 25</td><td>0.14 s average, worst 0.6 s</td></tr><tr><td>9x9</td><td><strong>only 7 of 25</strong></td><td>about 1 second</td></tr></tbody></table></div>
+<p>So I stopped the game at <strong>8x8</strong>. A smarter region builder is on my to-do list for 9x9.</p>
+<h4>Bugs I found and fixed today</h4>
+<ul>
+<li>The <strong>score counted twice</strong> after a win (800 instead of 400).</li>
+<li>The Play button had a <strong>pink ring</strong> from the magenta background. I now cut it out by color.</li>
+<li>The Undo button looked exactly like Back, so I added small names under the round buttons.</li>
+<li>On the profile popup, the Confirm button covered the avatars.</li>
+<li>The win glow had a hard edge. I made a soft glow.</li>
+</ul>
+<hr>
+<h3>Screenshots</h3>
+<p><strong>The game only</strong></p>
+<div class="tbl-wrap"><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td><img alt="splash" src="shots/00_splash.png"> Splash</td><td><img alt="menu" src="shots/01_menu.png"> Menu</td></tr><tr><td><img alt="level 1" src="shots/02_level1_start.png"> Level 1, the first puzzle</td><td><img alt="placed" src="shots/03_gameplay_ducks_placed.png"> Two ducks placed. They wink. One heart lost, one cell crossed out</td></tr><tr><td><img alt="hint" src="shots/04_gameplay_hint.png"> The hint and the pointing hand</td><td><img alt="7x7" src="shots/05_level20_7x7.png"> Level 20, a 7x7 board</td></tr><tr><td><img alt="win" src="shots/06_win_bravo.png"> Bravo</td><td><img alt="streak" src="shots/07_streak.png"> Streak</td></tr><tr><td><img alt="lose" src="shots/08_lose.png"> Out of hearts</td><td><img alt="profile" src="shots/09_profile.png"> Profile</td></tr><tr><td><img alt="settings" src="shots/10_settings.png"> Settings</td><td></td></tr></tbody></table></div>
+<p><strong>Unity + gameplay together</strong></p>
+<p><img alt="Unity and gameplay" src="shots/12_unity_editor_plus_gameplay.png"></p>
+<p><strong>Unity UI (Hierarchy and Scene view)</strong></p>
+<p><img alt="Unity UI" src="shots/13_unity_editor_ui_hierarchy.png"></p>
+<p><strong>Sprite sheets</strong> are in <code>Docs/Sprite_Sheets</code>.</p>
+<hr>
+<h3>What is next</h3>
+<ul>
+<li>Listen to the sounds and fix the quack.</li>
+<li>Fix the logo (the duck covers the C).</li>
+<li>Swap the font for a free one before release.</li>
+<li>Make 9x9 puzzles reliable.</li>
+<li>The three small icons on the rule cards, like the reference.</li>
+<li>Try it on my phone (build for Android).</li>
+<li>Daily Challenge needs a real test with a date change.</li>
+</ul>
+<hr>
+<h3>Day 3: Feedback round. Twelve things to fix and add</h3>
+<p>After playing the first version, I wrote down 12 problems and wishes. Here is what I did about each one.</p>
+<h4>1. The "I cannot place a duck" bug (the most important one)</h4>
+<p><strong>What was wrong:</strong> I trusted Unity's own "click count" to know if I double-tapped. The input system only counts two clicks if they are very fast (about 0.3 seconds), so on a real mouse or finger the game almost never saw a double-tap. The duck could not be placed.</p>
+<p><strong>The fix:</strong> I now measure the double-tap myself. Two taps on the <em>same cell</em> within <strong>0.45 seconds</strong> place a duck. The first tap's cross is taken back automatically. This does not depend on the input system any more.</p>
+<h4>2. Buttons like the reference (image 1)</h4>
+<p>All text buttons are now <strong>flat pills with round ends, wide and short</strong>: orange for the main action, grey when locked, white for the second choice, green for extras. Level 1 and a locked <strong>Daily Challenge</strong> (opens after 5 levels) copy the reference idea. I kept the round icon buttons round.</p>
+<h4>3. Copy the style, not every pixel</h4>
+<p>I redesigned the pages in my own way:</p>
+<ul>
+<li><strong>Home:</strong> the duck waves in the middle, a soft tile pattern behind, streak as a small chip.</li>
+<li><strong>Streak page:</strong> a white hero card with the feather nest and a big number, a <em>week strip with rounded chips</em>, and a <strong>gift chest on day 7</strong> (reference: round circles, gift at the end, no card).</li>
+<li><strong>Game screen:</strong> the title is in the middle, hearts and score are two chips, duck icons in a pill.</li>
+</ul>
+<h4>4. Tutorial (first run only)</h4>
+<p>A guided 4x4 board. A hand icon shows what to do and the rest of the board is dimmed:</p>
+<ol>
+<li><strong>Double-tap</strong> a cell: the hand taps twice. The duck pops in and winks.</li>
+<li><strong>Single tap</strong> a cell in the same column: the hand taps once. A cross spins in.</li>
+<li>Cross out another cell in the row.</li>
+<li>Double-tap the next duck. "Only one duck per color."</li>
+<li>Tap the <strong>hint bulb</strong>.</li>
+<li>Finish the board. Confetti, "Excellent! You've mastered the rules!" and a <strong>Start Game</strong> button.</li>
+</ol>
+<p>After the tutorial, it never shows again (I can replay it from Settings).</p>
+<h4>5. Was the economy from the GPT chat built?</h4>
+<p><strong>Partly.</strong> Here is the honest list.</p>
+<div class="tbl-wrap"><table><thead><tr><th>From the chat</th><th>Done?</th></tr></thead><tbody><tr><td>Reward = play minutes x income per minute (100 coins per minute at 4x4, grows with board size)</td><td>Yes</td></tr><tr><td>Hint costs 100 coins after the free ones, helper duck: 3 free a day, then 100 coins</td><td>Yes</td></tr><tr><td>Continue after losing = 200 coins (2 minutes)</td><td>Yes</td></tr><tr><td>Daily puzzle bonus (+200)</td><td>Yes</td></tr><tr><td><strong>Stars: +5% / +10% / +15% bonus</strong> (3 stars = no mistakes)</td><td><strong>Yes, new today</strong></td></tr><tr><td><strong>Streak rewards: day 7 = 1,500, day 14 = 3,000, day 30 = 7,500 coins</strong></td><td><strong>Yes, new today</strong></td></tr><tr><td><strong>Cosmetic prices: avatars cost 1,000 to 6,000 coins</strong> (10 to 60 minutes of play)</td><td><strong>Yes, new today</strong></td></tr><tr><td>Income growing by world (100, 110, 120, 135 ...)</td><td>Only a simple version (grows with board size)</td></tr><tr><td>XP and levels</td><td>No</td></tr><tr><td>Rewarded ads</td><td>No (needs an ads SDK)</td></tr></tbody></table></div>
+<h4>6. Effects from the Hyper Casual FX pack</h4>
+<p>The pack was only 0.9 MB, so I imported it after checking its size (lesson from the sound pack). I use its <strong>confetti</strong> on the Bravo page, the streak page and the tutorial end, and its <strong>sparkle</strong> and <strong>flash</strong> on placing ducks and hints. I also use three effects from the Cartoon FX pack: <em>magic poof</em> (helper duck), <em>broken heart</em> (a mistake), <em>falling stars</em>.</p>
+<h4>7. A test page for every sound and effect</h4>
+<p><strong>Settings &gt; Test SFX &amp; VFX.</strong> One button for every game sound (12) and every effect (14): confetti, sparkle, flash, shine, poof, falling stars, broken heart, flying coins, number count-up, duck winks, duck wins, duck loses, screen shake.</p>
+<h4>8. New duck animations (sprite sheets)</h4>
+<p>I generated two more sheets with the same duck: a <strong>6-frame victory jump</strong> and a <strong>6-frame crying</strong> animation. The Bravo page and the lose page play them.</p>
+<h4>9. New logo, icon, splash and featured image</h4>
+<ul>
+<li><strong>Logo:</strong> stacked DUCK / DOKU. Every letter is readable now. The duck peeks over the K.</li>
+<li><strong>App icon:</strong> the duck face on an orange puzzle background. Also set as the Unity app icon.</li>
+<li><strong>Splash screen:</strong> 3D duck on a puzzle board with the logo.</li>
+<li><strong>Featured image</strong> for the store (1024 x 500) and a 512 icon: in <code>Docs/StoreAssets</code>.</li>
+<li><strong>Start-up order:</strong> icon (pops in with sparkles) -&gt; splash -&gt; tutorial (first time only) -&gt; home.</li>
+</ul>
+<h4>10. DOTween everywhere</h4>
+<p>DOTween now animates: button presses, popups, the icon and splash, the home screen entrance, ducks popping in, crosses spinning in, hearts breaking, the tutorial hand and tap ripples, the helper duck flying in, the score counting up, <strong>coins flying into the coin counter</strong>, stars popping, the streak number counting up, the tracker icons, the hint glow, screen shake, floating logo and duck. I removed my old hand-made animation code.</p>
+<h4>Image cost (real numbers from the API log)</h4>
+<p>The API tells me how many tokens each image used. Output tokens cost $30 per million, and this matches your price table (1,325 tokens = $0.040, and the table says $0.041 for 1536x1024).</p>
+<div class="tbl-wrap"><table><thead><tr><th>Batch</th><th>Images</th><th>Estimated cost</th></tr></thead><tbody><tr><td>First 7 sprite sheets</td><td>7</td><td>about $0.34</td></tr><tr><td>Logo, win sheet, lose sheet, icon, splash, featured</td><td>6</td><td>about $0.32</td></tr><tr><td><strong>Total</strong></td><td><strong>13</strong></td><td><strong>about $0.66 (budget was $1)</strong></td></tr></tbody></table></div>
+<p>Two calls failed and made no image: the first featured image (size too small) and one network error.</p>
+<p>The price of the images I gave the model as reference is a guess ($8 per million), so the real total may be a little lower. <strong>I still need to compare with the OpenAI billing page.</strong></p>
+<h4>Bugs I found while testing today</h4>
+<ul>
+<li>The placed duck was <strong>invisible</strong>: its wink animation cancelled its own pop-in. Fixed.</li>
+<li>The particle effects were <strong>10 times too big</strong> for the UI and covered the screen in white haze. I scaled them down.</li>
+<li>The shine effect hid the big number on the streak page. Removed there.</li>
+<li><strong>9x9 boards</strong> are still not reliable, so the game stops at 8x8.</li>
+</ul>
+<h4>Not done yet</h4>
+<ul>
+<li>I could not test a real mouse click through my tools, only the tap code. Please test the double-tap with a mouse.</li>
+<li>I cannot hear the sounds. Please check the quack in the test page.</li>
+<li>Build for Android.</li>
+</ul>
+<hr>
+<h3>Day 4: More feedback. 17 changes</h3>
+<p>I played the game again and wrote down 17 things. Here is what changed.</p>
+<h4>The double-tap bug, again (the real cause)</h4>
+<p>Last time I measured the double-tap myself, but I was still listening for Unity's <strong>click</strong> event. A click is thrown away if the finger moves even a little between press and release. That is why it worked "sometimes". Now the game listens for the <strong>press</strong> itself, so nothing is thrown away, and the time window is <strong>1 second</strong> (I had 0.45 seconds).</p>
+<h4>New: drag to cross many cells</h4>
+<p>Press a cell and drag over other cells: they all get a cross. If you start on a cell that already has a cross, dragging takes the crosses away.</p>
+<h4>Tutorial v2 (the full lesson)</h4>
+<div class="tbl-wrap"><table><thead><tr><th>Step</th><th>What the player does</th></tr></thead><tbody><tr><td>1</td><td>Double-tap to place a duck</td></tr><tr><td>2</td><td><strong>Cross out every cell the duck blocks</strong>: its row, column, color and touching cells (8 cells on the tutorial board). Tap, or drag. The coach shows a counter (3/8). The hand shows the drag.</td></tr><tr><td>3</td><td>Tap the <strong>helper duck</strong> (it places a duck)</td></tr><tr><td>4</td><td>Cross out the cells the new duck blocks</td></tr><tr><td>5</td><td>Tap <strong>Undo</strong> to take back the last move</td></tr><tr><td>6</td><td>Cross that cell out again</td></tr><tr><td>7</td><td>Tap the <strong>hint bulb</strong></td></tr><tr><td>8</td><td>Place the last ducks</td></tr></tbody></table></div>
+<p>At the end there are two buttons: <strong>Start Game</strong> and <strong>Replay tutorial</strong>.</p>
+<p>The hand had a bug where it could be missing: I found that DOTween was re-using finished tweens, so my saved hand animation could be killed by something else. I turned re-use off, and I added a safety: if the hand is not on screen for 1.2 seconds, it comes back.</p>
+<h4>Screens</h4>
+<ul>
+<li><strong>Home:</strong> the duck, logo and buttons now stand still (they only slide in once). A <strong>red dot</strong> shows on Daily Challenge when today's challenge is waiting. I opened the daily challenge earlier (after 2 levels).</li>
+<li><strong>Streak page:</strong> the nest stands still. <strong>Small gift on day 3 (+500), big gift on day 7 (+1,500).</strong> They repeat every week.</li>
+<li><strong>Level complete (new design, from the reference idea):</strong> a green <strong>COMPLETE</strong> banner, the level number, 3 stars, <strong>COINS +115</strong> (instead of points), the duck jumping on the banner, and a <strong>Next level</strong> button. Coins fly into the counter. I removed the pulsing "Bravo" text.</li>
+<li><strong>Lose page:</strong> the two buttons now say what they do. <strong>Start over</strong> = a fresh board with 3 hearts. <strong>Keep playing: 1 heart, 200 coins</strong> = the board stays as it is and you get 1 heart.</li>
+<li><strong>Rules at the top now have pictures</strong>: a tiny 3x3 board for each rule (duck plus crosses).</li>
+<li><strong>Settings:</strong> the text no longer covers the buttons.</li>
+</ul>
+<h4>Sound</h4>
+<ul>
+<li><strong>Your quack:</strong> I use the file you gave me (<code>duck_quack_user.mp3</code>) for placing a duck. It is 3.1 seconds long. The game plays only <strong>the first 1 second</strong> and fades it out quickly.</li>
+<li><strong>Test page fixed:</strong> it has its own speaker, so you hear the sounds even when Sound is Off, and the game music is <strong>paused</strong> while the test page is open. The sound that plays turns <strong>white</strong>.</li>
+<li><strong>Sound Lab</strong> (Settings &gt; Test SFX &amp; VFX &gt; Sound Lab): browse <strong>every</strong> group you listed. Tap a sound to hear it, the playing row lights up, a bar on top shows the name and length, a <strong>Stop</strong> button, and a green tag <strong>USED: ...</strong> marks the sounds the game already uses. The first group is "Used in this game".</li>
+<li>32 groups: Weired Winning, Winning Sounds, Fanfares, Loosing Sounds, Collecting and Counting Points, Intros, Cute Sounds, Close and Open Menus, Bing/Pling/Swooshes, Casual UI (Cancel, Click, Musicaly, Confirm, Page Change, Swooshes and Hover, Whoop), the 4 music groups, and one group for each folder of <strong>Fun Casual Sounds</strong>.</li>
+<li>It reads the packs straight from the Assets folder, so it works <strong>in the Unity Editor only</strong> (the packs are 5 GB and must not go into a build).</li>
+</ul>
+<h4>Things I could not check</h4>
+<ul>
+<li>My test computer had <strong>no sound output</strong>, so I could not confirm that sounds play. The lists, tags and buttons work. Please try the test page and tell me if a sound is silent.</li>
+<li>I tested taps and drags by calling the game's own input code, not with a real mouse.</li>
+</ul>
+<hr>
+<h3>Day 5: A real level plan, and more polish</h3>
+<h4>New sounds you picked</h4>
+<div class="tbl-wrap"><table><thead><tr><th>Where</th><th>Sound (from the pack)</th></tr></thead><tbody><tr><td>Level complete</td><td>Casino <code>WinningFanfare03</code></td></tr><tr><td>Close a menu</td><td>Candy <code>Closing_menue01</code></td></tr><tr><td>Open a menu</td><td>Candy <code>Open_menue07</code></td></tr><tr><td>Helper duck button</td><td>Candy <code>Bing05-01</code></td></tr><tr><td>Hint bulb</td><td>Candy <code>Bing06-01</code></td></tr><tr><td>Music (home <strong>and</strong> game)</td><td><code>Song01Kalimba</code>, the same song on both, so it never restarts</td></tr></tbody></table></div>
+<p><code>Bing05</code>, <code>Bing06</code> and <code>Song01Kalimba</code> exist in more than one folder of the pack. I used the Candy versions of the Bings, and the CuteAndFunnyLoops version of the song (the one the home page already used). If I picked the wrong copy, I only need the folder name.</p>
+<h4>Screens</h4>
+<ul>
+<li><strong>Complete:</strong> the banner is now one flat green, with no darker green layers.</li>
+<li><strong>Failed:</strong> same card as Complete, in cool colors. A red <strong>FAILED</strong> banner, the crying duck sits on it, the level number, three empty hearts, and the two buttons inside the card.</li>
+</ul>
+<h4>The puzzle plan (from the design chat)</h4>
+<p>The design chat said the game must teach the rules through play, and that every puzzle needs <strong>exactly one answer</strong> and a <strong>difficulty a person can reach without guessing</strong>. I built that in three parts.</p>
+<p><strong>1. A level table (<code>LevelDesign</code>)</strong></p>
+<div class="tbl-wrap"><table><thead><tr><th>Levels</th><th>Board</th><th>Ducks already placed</th><th>What it teaches</th></tr></thead><tbody><tr><td>1-3</td><td>4x4</td><td>2</td><td>rows</td></tr><tr><td>4-6</td><td>4x4</td><td>1-2</td><td>columns</td></tr><tr><td>7-10</td><td>4x4</td><td>1-2</td><td>colors</td></tr><tr><td>11-15</td><td>4x4</td><td>1</td><td>no touching</td></tr><tr><td>16-20</td><td>4x4</td><td>0-1</td><td>the diagonal</td></tr><tr><td>21-30</td><td>5x5</td><td>1-2</td><td>using all rules</td></tr><tr><td>31-45</td><td>5x5</td><td>0-1</td><td>longer chains</td></tr><tr><td>46-60</td><td>6x6</td><td>1</td><td>more colors</td></tr><tr><td>61-80</td><td>6x6</td><td>0-1</td><td>multi-step</td></tr><tr><td>81-100</td><td>7x7</td><td>1</td><td>irregular colors</td></tr><tr><td>101-125</td><td>7x7</td><td>0-1</td><td>complex</td></tr><tr><td>126-150</td><td>8x8</td><td>0-1</td><td>dense</td></tr><tr><td>151+</td><td>8x8</td><td>0</td><td>long chains</td></tr></tbody></table></div>
+<p>The starting ducks have a small <strong>lock</strong> and cannot be moved. The rule the level teaches is <strong>lit up with an orange border</strong> on the rule card, and the coach says it in one line.</p>
+<p><strong>2. A "human solver" (<code>HumanSolver</code>).</strong> It solves each puzzle like a person, and counts how hard the deductions were:</p>
+<ol>
+<li>only one place is left in a row, column or color</li>
+<li>a color fits in one row or column only</li>
+<li>the same with two colors</li>
+<li>"what if I put a duck here?" ends in a dead end, or the same with three colors</li>
+</ol>
+<p>If none of these help, the puzzle needs guessing, and it is thrown away.</p>
+<p><strong>3. A generator that keeps only puzzles that fit the level.</strong> Same level, same puzzle, every time. Each puzzle shows a word under the title: <em>Very easy, Easy, Medium, Hard, Expert</em>.</p>
+<p><strong>Test result, all 200 levels:</strong></p>
+<ul>
+<li>Every level has <strong>exactly one solution</strong>.</li>
+<li>Every level fits its row in the table (size, ducks, difficulty). <strong>0 misses.</strong></li>
+<li>Speed: <strong>1 ms on average, 20 ms at worst.</strong></li>
+<li>Difficulty goes up from 1.0/10 at level 1 to about 8/10 at level 200 (levels 1-100 are easy to medium).</li>
+</ul>
+<p>My first version failed on the big boards (levels 101 and up): puzzles with one answer were too rare on 8x8. The fix: when a puzzle has several answers, the generator nudges single cells to another color until only one answer is left.</p>
+<h4>Economy numbers changed to match the plan</h4>
+<ul>
+<li>Reward = expected minutes x income of the world (100, 110, 120, 135 ... 270 per minute, one world per 20 levels). Level 1 = 100 coins, level 5 = 150, level 10 = 200.</li>
+<li>Helper duck: <strong>150 coins</strong> (was 100).</li>
+</ul>
+<h4>Not built yet (also in the design chat)</h4>
+<p>The shop with outfits (1,000 to 30,000 coins), Remove Ads, the three hint levels (highlight, explain, place) and the ad schedule. They need a shop screen and an ads SDK. I did not build them because you asked for the puzzle redesign.</p>
+<hr>
+<h3>Day 6: Fixes, a restart button, and the shop</h3>
+<ul>
+<li><strong>Music:</strong> home and game both play <code>Song01Kalimba</code> from the <strong>Puzzle &amp; Thinking Game Music Loops</strong> folder (I had used the Cute &amp; Funny copy before).</li>
+<li><strong>Restart button:</strong> new round button in the bottom row (Undo, Restart, Helper, Hint). It asks "Restart level?" first, so a wrong tap does not wipe the board.</li>
+<li><strong>Bug: crossing out every cell kept 3 hearts.</strong> Crossing out the cell where a duck belongs is now a <strong>mistake</strong> and costs a heart, like a wrong duck. The game waits about 1.1 seconds before it counts, because a double-tap starts with a cross on that same cell. Tested: a lone cross costs a heart, a slow double-tap still places the duck.</li>
+<li><strong>Keep playing</strong> button is green.</li>
+<li><strong>Only one quack.</strong> I removed the two spare "place duck" sounds from the test page and the Sound Lab. The game only uses your quack (cut to 1 second).</li>
+<li><strong>Test page:</strong> now also has <strong>Failed (level lost)</strong> and <strong>Coin arrives (tick)</strong>, the two sounds that were missing. Every game sound is on the page.</li>
+<li><strong>Shop</strong> (new): button on the home page, next to the streak. Tabs: <strong>Ducks</strong> (hint 100, helper duck 150, 3 helper ducks 400), <strong>Outfits</strong> (the 8 duck pictures: 1,000 / 3,000 / 3,000 / 7,500 / 15,000 / 30,000 coins, from the economy plan) and <strong>Themes</strong>, <strong>No ads</strong> (both "coming soon"). Outfits never change the puzzle. I found and fixed a bug while testing: an outfit charged double.</li>
+</ul>
+<h4>Design change: no "one rule per 3 levels"</h4>
+<p>I first built the level table so that levels 1-20 each taught one rule (rows, then columns...). You said no: <strong>every level uses all the rules</strong>, and the tutorial (level zero) teaches them. I removed the lesson text and the orange rule highlight. The table keeps only the board size, the number of starting ducks, and the difficulty.</p>
+<hr>
+<h3>Day 7: Breathing room, a better shop button, and the first Android build</h3>
+<h4>Spacing (checked on every screen)</h4>
+<p>Rule I now follow: <strong>at least 40 units of empty space around anything inside a card</strong>, and about 100 units between the bottom button row and the edge of the phone. The old game screen had its bottom captions only 13 units from the edge, which a phone's gesture bar would cover.</p>
+<ul>
+<li><strong>Game screen:</strong> re-flowed from top to bottom. The board is a bit smaller (860 instead of 900) to give every row more space. The bottom buttons sit higher.</li>
+<li><strong>Complete and Failed cards:</strong> taller, so the last button has real space under it.</li>
+<li><strong>Shop:</strong> the cards are taller (700), every card has the same layout (picture, name, price, button), and both the Ducks and Outfits tabs scroll. The "Coming soon" card is taller and its button no longer touches the edge.</li>
+<li><strong>Settings, Profile, Restart popup, tutorial end buttons:</strong> more space between the buttons and from the edge.</li>
+</ul>
+<h4>Coins while playing</h4>
+<p>The game screen (and the daily challenge, which uses the same screen) now has a <strong>coin chip</strong> next to hearts and score. When you pay for something, the number counts down and a red <strong>-150</strong> floats away, so it is clear where the coins went.</p>
+<h4>Shop button</h4>
+<p>It is now a big orange button with the treasure chest sticking out on the left, and a red <strong>!</strong> when there is something you can afford.</p>
+<h4>Test page fixes</h4>
+<ul>
+<li>Buttons in the test page no longer play the button click.</li>
+<li>Two buttons no longer light up together: the page remembers which <em>button</em> you pressed, not which <em>sound file</em> (Wrong duck and Failed use the same file, and so do Coin arrives and Cross out).</li>
+</ul>
+<h4>Android</h4>
+<p>Package name <code>com.sid.duckdoku</code>, ARM64, portrait, IL2CPP, minimum Android 8 (API 26). The 5 GB sound packs are not in the build (only the small <code>Resources</code> folder is), and the Sound Lab is editor-only.</p>
+<hr>
+<h3>Day 8: Bigger back buttons, a full-screen "life lost", ads, purchases and the Play Store</h3>
+<h4>Look and feel</h4>
+<ul>
+<li><strong>Streak page:</strong> the "This week" card is taller, the title has space around it, and the day chips and gift pictures are bigger.</li>
+<li><strong>Game screen:</strong> on tall phones the extra height now goes into bigger rows and more space between them (hearts, score, coins, ducks row, rule cards).</li>
+<li><strong>Back and settings buttons</strong> are bigger (150) and sit further from the screen edge on the game, home, streak and shop screens.</li>
+<li><strong>Life lost:</strong> every lost heart now plays a full-screen effect: red flash, screen shake, a broken heart and a sad duck with "-1 heart" and "2 hearts left". It does not block play. On the last heart it plays first, then the FAILED card comes.</li>
+<li>Settings no longer shows the old prototype text.</li>
+</ul>
+<h4>Money side (nothing was live yet, all tested with test ads and fake purchases)</h4>
+<ul>
+<li><strong>Rewarded ads</strong> (the player chooses to watch): free hint, free helper duck, free coins in the shop (+300), double coins on the Complete card, and a free heart on the Failed card.</li>
+<li><strong>Full-screen ads</strong> only after finishing a level, not before level 8, at most once every 5 levels and not twice within 5 minutes. No banner ads at all.</li>
+<li><strong>Consent form</strong> (Google's own) for players in the EU and UK, and a "Privacy policy" button in Settings.</li>
+<li><strong>Purchases (Google Play):</strong> <code>remove_ads</code> (one time), and three coin packs <code>coins_small</code> (2,000), <code>coins_medium</code> (6,000), <code>coins_large</code> (15,000). The shop has new tabs <strong>Coins</strong> and <strong>No ads</strong> (with "Restore purchases").</li>
+<li>Why <strong>Unity In-App Purchasing</strong> if we use Google Play billing? It is only a helper library. Under the hood it talks to Google Play Billing, and it adds the BILLING permission Play Console asks for.</li>
+<li>In the Unity Editor, ads are a fake 2-second screen and purchases are faked, so I can test without a phone.</li>
+</ul>
+<h4>Play Store steps</h4>
+<ul>
+<li>Made a <strong>release keystore</strong> (signing key) with a random password. It lives in the <code>Keystore</code> folder and must be backed up.</li>
+<li>Built the first <strong>.aab</strong> (app bundle). Play Console then said one-time products need the BILLING permission, so version 2 (with purchases and ads) is the one to upload.</li>
+<li>Privacy policy, terms and data-deletion pages are hosted on GitHub Pages (Tetra Developers).</li>
+</ul>
+<footer>
+  <p>Duckdoku &copy; Tetra Developers &middot; <a href="devlog.html">How it was made</a> &middot; <a href="privacy.html">Privacy Policy</a></p>
+</footer>
+</body>
+</html>
