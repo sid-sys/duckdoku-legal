@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How Duckdoku was made</title>
+<style>
+  :root{
+    --bg:#fff3dc; --card:#fffaf0; --ink:#3b2a1a; --brown:#6b4a2b;
+    --orange:#e8891c; --orange-dark:#c46a00; --line:#f0dcb8;
+  }
+  *{box-sizing:border-box}
+  body{
+    font-family:-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;
+    max-width:860px; margin:0 auto; padding:0 18px 60px;
+    line-height:1.65; color:var(--ink); background:var(--bg);
+  }
+  header{padding:36px 0 18px; text-align:center}
+  header a.back{display:inline-block; margin-bottom:14px; font-size:14px; color:var(--orange-dark); text-decoration:none}
+  h1{color:var(--orange); font-size:2.1rem; margin:6px 0 6px}
+  .sub{color:var(--brown); font-size:1.05rem; margin:0 0 4px}
+  .byline{color:#9c8360; font-size:.9rem}
+  h2{color:var(--orange-dark); margin-top:46px; border-bottom:2px solid var(--line); padding-bottom:6px}
+  p{margin:14px 0}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px 22px; margin:18px 0}
+  .shot{width:100%; border-radius:12px; border:1px solid var(--line); margin:14px 0; display:block}
+  .shot-cap{font-size:.88rem; color:#8a7457; text-align:center; margin-top:-6px}
+  .gallery{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin:16px 0}
+  .gallery img{width:100%; border-radius:10px; border:1px solid var(--line)}
+  @media (max-width:560px){.gallery{grid-template-columns:1fr}}
+  a{color:var(--orange-dark)}
+  code{background:#f6e9d0; padding:2px 6px; border-radius:6px; font-size:.92em}
+  ul{padding-left:22px}
+  .cta{
+    display:block; text-align:center; background:var(--orange); color:#fff; font-weight:bold;
+    text-decoration:none; padding:18px; border-radius:14px; font-size:1.15rem; margin:22px 0;
+    box-shadow:0 4px 0 var(--orange-dark);
+  }
+  .cta:hover{filter:brightness(1.05)}
+  footer{text-align:center; color:#9c8360; font-size:.85rem; margin-top:50px}
+  .creditbox{background:#fff; border:1px dashed var(--line); border-radius:10px; padding:14px 18px; font-size:.94rem; margin:10px 0}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="index.html">&larr; Duckdoku home</a>
+  <h1>🦆 How I built Duckdoku</h1>
+  <p class="sub">A duck logic puzzle, built solo with AI tools</p>
+  <p class="byline">by Tetra Developers</p>
+</header>
+
+<p>Duckdoku is a small Sudoku-style puzzle game: one duck per row, one duck per column, one duck per color, and no two ducks touching. No numbers, no math &mdash; just looking and thinking. This page is the honest story of how it got made: which tools I used, what I paid for art, and what came from an asset store instead of being generated.</p>
+
+<h2>The tools</h2>
+<div class="card">
+  <p>I built the whole game inside <strong>Claude Code</strong>, Anthropic's coding assistant, talking to it like a teammate instead of writing every line myself. The model behind it was <strong>Claude Sonnet 5</strong>.</p>
+  <p>Claude didn't just write code in a text editor and hope it worked &mdash; it actually ran and drove the Unity Editor directly, using two things:</p>
+  <ul>
+    <li><strong>Unity CLI</strong> &mdash; Unity's own command-line tools, for builds and automation. <a href="https://docs.unity3d.com/Manual/CommandLineArguments.html" target="_blank" rel="noopener">docs.unity3d.com/Manual/CommandLineArguments.html</a></li>
+    <li><strong>An MCP server for the Unity Editor</strong> &mdash; MCP (Model Context Protocol) is an open standard that lets an AI assistant call real tools instead of just talking. Through it, Claude could create GameObjects, edit scripts, press Play, take screenshots of the running game, and trigger real Android builds, all inside my actual Unity project. <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">modelcontextprotocol.io</a></li>
+  </ul>
+  <p>That combination is how features got built, tested with real gameplay (not guesses), screenshotted, and fixed in the same conversation.</p>
+</div>
+
+<div class="creditbox">
+  On tokens: Claude Code doesn't hand me a running total of tokens spent across a project like this one, built over many separate conversations across several days &mdash; so I can't give an exact number here without making one up. What I can say honestly: it was a lot of back-and-forth, a lot of small fixes, and more than one rebuilt Android app bundle along the way.
+</div>
+
+<h2>The art</h2>
+<div class="card">
+  <p>For the duck characters, icons, and store art, I gave Claude my own OpenAI API key. Claude generated the images as <strong>sprite sheets</strong> &mdash; several poses or frames in one image, cheaper than generating each one separately &mdash; and then cut each sheet into the individual sprite images the game actually uses.</p>
+  <img class="shot" src="asset_generation.png" alt="Contact sheet of generated duck sprite sheets, before being cut into individual sprites">
+  <p class="shot-cap">The generated sprite sheets, before Claude cut them into individual images</p>
+  <p>Every image was made with OpenAI's image generation API. Before generating anything, Claude estimated the cost first and got my go-ahead. Total real spend on art for this project, checked directly on the OpenAI usage dashboard:</p>
+  <img class="shot" src="openai_cost.png" alt="OpenAI usage dashboard showing total spend for image generation">
+  <p class="shot-cap">OpenAI usage dashboard &mdash; total image generation spend</p>
+</div>
+
+<h2>The sound</h2>
+<div class="card">
+  <p>Sound effects and music came from two places:</p>
+  <ul>
+    <li>Paid asset packs from the <strong>Unity Asset Store</strong> &mdash; a casual game SFX &amp; music pack, a second casual sound effects pack, and a cartoon particle effects pack for the visual effects. I won't list which exact sound plays for which exact action &mdash; just that the game's audio and effects are built from these licensed packs.</li>
+    <li>A few custom sound effects generated with <strong>ElevenLabs</strong>, for moments the asset packs didn't quite cover (like the life-lost sound and the game-start chime).</li>
+  </ul>
+</div>
+
+<h2>What it looks like</h2>
+<div class="gallery">
+  <img src="01_tutorial_rules.png" alt="Tutorial screen explaining the game's three rules">
+  <img src="02_home.png" alt="Duckdoku home screen">
+  <img src="03_gameplay.png" alt="Gameplay on a puzzle level">
+  <img src="04_heart_lost_vfx.png" alt="Full-screen effect when a heart is lost">
+  <img src="05_level_complete_confetti.png" alt="Level complete screen with confetti">
+  <img src="06_streak_page.png" alt="Daily streak page">
+  <img src="07_shop_ducks.png" alt="Shop screen, hints and helper ducks">
+  <img src="08_shop_outfits_locked.png" alt="Shop screen, an outfit locked behind a star requirement">
+</div>
+
+<img class="shot" src="unity_editor.png" alt="Unity Editor open alongside a live gameplay screenshot">
+<p class="shot-cap">Unity Editor, mid-development &mdash; features were tested with real gameplay, not guesses</p>
+
+<h2>Play it</h2>
+<a class="cta" href="https://play.google.com/store/apps/details?id=com.sid.duckdoku" target="_blank" rel="noopener">🦆 Get Duckdoku on Google Play</a>
+
+<footer>
+  <p>Duckdoku &copy; Tetra Developers &middot; <a href="privacy.html">Privacy Policy</a> &middot; <a href="terms.html">Terms of Use</a></p>
+</footer>
+
+</body>
+</html>
