@@ -39,6 +39,10 @@
   .cta:hover{filter:brightness(1.05)}
   footer{text-align:center; color:#9c8360; font-size:.85rem; margin-top:50px}
   .creditbox{background:#fff; border:1px dashed var(--line); border-radius:10px; padding:14px 18px; font-size:.94rem; margin:10px 0}
+  .tbl-wrap{overflow-x:auto; margin:14px 0}
+  table{border-collapse:collapse; width:100%; background:#fff}
+  th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; font-size:.94rem}
+  th{background:#f6e9d0; color:var(--brown)}
 </style>
 </head>
 <body>
@@ -83,6 +87,30 @@
   <p>Every image was made with OpenAI's image generation API. Before generating anything, Claude estimated the cost first and got my go-ahead. Total real spend on art for this project, checked directly on the OpenAI usage dashboard:</p>
   <img class="shot" src="openai_cost.png" alt="OpenAI usage dashboard showing total spend for image generation">
   <p class="shot-cap">OpenAI usage dashboard &mdash; total image generation spend</p>
+</div>
+
+<h2>Would a cheaper setting have worked?</h2>
+<div class="card">
+  <p>All the art above was made at <strong>medium</strong> quality. Afterwards I re-made the same 7 sprite sheets at <strong>low</strong> quality to see what I would have saved. Same model (<code>gpt-image-2</code>), same size (1920&times;1088), same prompts word for word &mdash; only the quality setting changed.</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th></th><th>Medium</th><th>Low</th></tr></thead>
+    <tbody>
+      <tr><td>Output tokens per sheet</td><td>1,325</td><td>148</td></tr>
+      <tr><td>Output cost per sheet ($30 per million tokens)</td><td>$0.040</td><td>$0.004</td></tr>
+      <tr><td>Time per sheet</td><td>27&ndash;37 s</td><td>15&ndash;27 s</td></tr>
+      <tr><td>All 7 sheets, estimated total*</td><td>$0.34</td><td>$0.09</td></tr>
+    </tbody>
+  </table></div>
+  <p class="shot-cap" style="text-align:left">* Output prices are real. The price of input tokens (the reference picture) is my guess, so the totals are estimates.</p>
+  <img class="shot" src="low_vs_medium.jpg" alt="Sprite sheets side by side: medium quality on the left, low quality on the right" loading="lazy">
+  <p class="shot-cap">Medium on the left, low on the right</p>
+  <ul>
+    <li>The output price depends only on size and quality, not on the prompt: every sheet used exactly 1,325 tokens at medium and 148 at low.</li>
+    <li>Low is about <strong>9 times cheaper</strong> on output, but only about <strong>3.7 times cheaper</strong> in total, because a reference picture costs the same at any quality.</li>
+    <li>The shapes and poses were the same and sharp. The ducks came out <strong>more yellow</strong> and the background a little uneven. My tool still cut all 58 sprites.</li>
+    <li>My advice: <strong>low for tests and first drafts, medium for final art</strong>.</li>
+  </ul>
+  <p>I made each sheet only once and did not test high quality, so treat this as one honest test, not a rule. Full numbers and the exact settings are in <a href="journal.html#day9">Day 9 of the journal</a>.</p>
 </div>
 
 <h2>The sound</h2>

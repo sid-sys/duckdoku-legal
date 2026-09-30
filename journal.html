@@ -39,7 +39,7 @@
 </header>
 
 <div class="note">
-  <strong>Art generation, at a glance:</strong> all Duckdoku art was made with OpenAI's image API (<code>gpt-image-2</code> for the main art, <code>gpt-image-1</code> for a couple of later images), <strong>medium quality</strong>, generated close to <strong>1080p</strong> (1920&times;1088, the nearest size the tool allows). Images came back as <strong>sprite sheets</strong> &mdash; several poses in one picture &mdash; and were cut into the individual images the game uses.
+  <strong>Art generation, at a glance:</strong> all Duckdoku art was made with OpenAI's image API (<code>gpt-image-2</code> for the main art, <code>gpt-image-1</code> for a couple of later images), <strong>medium quality</strong>, generated close to <strong>1080p</strong> (1920&times;1088, the nearest size the tool allows). Images came back as <strong>sprite sheets</strong> &mdash; several poses in one picture &mdash; and were cut into the individual images the game uses. On <a href="#day9">Day 9</a> I re-ran the same sheets at <strong>low</strong> quality to compare price and look.
 </div>
 
 <div class="note">
@@ -412,6 +412,50 @@ A logo and splash sheet: on the left, a large 3D bubble-letter logo reading exac
 <li>Built the first <strong>.aab</strong> (app bundle). Play Console then said one-time products need the BILLING permission, so version 2 (with purchases and ads) is the one to upload.</li>
 <li>Privacy policy, terms and data-deletion pages are hosted on GitHub Pages (Tetra Developers).</li>
 </ul>
+<hr>
+<h3 id="day9">Day 9: Would "low" quality have been enough? (an image cost test)</h3>
+<p>All the art on Day 1 was made at <strong>medium</strong> quality. Today I asked one question: what if I had used <strong>low</strong>? So I made the same 7 sprite sheets again at low quality, and compared price, time and look.</p>
+<h4>The exact setup</h4>
+<ul>
+<li>Model: <code>gpt-image-2</code> (OpenAI image API). Quality: <strong>low</strong> (Day 1 was medium). Size: <strong>1920x1088</strong>. One image per call.</li>
+<li>Sheets 1, 4 and 5: a normal generation call, no reference picture.</li>
+<li>Sheets 2, 3, 6 and 7: an edit call with the <strong>low</strong> faces sheet as the reference picture (the same way as Day 1).</li>
+<li>Prompts: <strong>the same 7 prompts, word for word</strong> (sheet 1 is shown in full in "Example prompts I used" above). I did not change one word.</li>
+<li>My cutting script found <strong>all 58 sprites</strong> in the low sheets, the same count as before.</li>
+</ul>
+<img src="low_vs_medium.jpg" alt="Four sprite sheets side by side: medium quality on the left, low quality on the right" loading="lazy">
+<p style="font-size:.85rem;color:#9c8360">Medium quality on the left, low quality on the right (avatars, UI kit, dance poses, streak and rewards).</p>
+<img src="low_contact_sheet.jpg" alt="All 58 sprites cut from the low quality sheets" loading="lazy">
+<p style="font-size:.85rem;color:#9c8360">All 58 sprites cut from the low quality sheets.</p>
+<h4>Tokens, time and price (real numbers from the API log)</h4>
+<p>Tokens are the pieces OpenAI counts and charges for. Output tokens cost $30 per million (a real price). The price of input tokens is <strong>my guess</strong> ($5 per million for text, $8 per million for a reference picture), so the "estimated total" columns are only estimates.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Sheet</th><th>Output tokens, medium</th><th>Output tokens, low</th><th>Time, medium</th><th>Time, low</th><th>Estimated total, medium</th><th>Estimated total, low</th></tr></thead><tbody>
+<tr><td>1 Duck faces</td><td>1,325</td><td>148</td><td>27 s</td><td>17 s</td><td>$0.041</td><td>$0.006</td></tr>
+<tr><td>2 Dance and win</td><td>1,325</td><td>148</td><td>37 s</td><td>27 s</td><td>$0.054</td><td>$0.018</td></tr>
+<tr><td>3 Duck actions</td><td>1,325</td><td>148</td><td>37 s</td><td>27 s</td><td>$0.053</td><td>$0.018</td></tr>
+<tr><td>4 UI kit</td><td>1,325</td><td>148</td><td>31 s</td><td>19 s</td><td>$0.042</td><td>$0.006</td></tr>
+<tr><td>5 Streak and rewards</td><td>1,325</td><td>148</td><td>28 s</td><td>15 s</td><td>$0.041</td><td>$0.006</td></tr>
+<tr><td>6 Avatars</td><td>1,325</td><td>148</td><td>33 s</td><td>27 s</td><td>$0.053</td><td>$0.018</td></tr>
+<tr><td>7 Logo and splash</td><td>1,325</td><td>148</td><td>34 s</td><td>26 s</td><td>$0.053</td><td>$0.018</td></tr>
+<tr><td><strong>All 7 sheets</strong></td><td></td><td></td><td></td><td></td><td><strong>$0.34</strong></td><td><strong>$0.09</strong></td></tr>
+</tbody></table></div>
+<p>What I learned:</p>
+<ol>
+<li><strong>The output price is fixed by size and quality, not by the prompt.</strong> Every 1920x1088 sheet used exactly 1,325 tokens at medium and exactly 148 at low. So the price of an image can be worked out before you make it.</li>
+<li><strong>Low is about 9 times cheaper on output</strong> ($0.040 against $0.004 per sheet).</li>
+<li><strong>But only about 3.7 times cheaper in total</strong>, because a reference picture costs about 1,508 input tokens at any quality.</li>
+<li>Low is also faster (15 to 27 seconds, against 27 to 37).</li>
+</ol>
+<h4>Was the look good enough?</h4>
+<p>Mostly yes. Shapes, poses, faces and UI pieces are the same and sharp. What changed:</p>
+<ul>
+<li><strong>The ducks are more yellow.</strong> Medium ducks are cream and butter yellow. Low ducks are more yellow and orange, most clearly on the dance sheet.</li>
+<li><strong>The magenta background is a little darker and uneven.</strong> It still cut cleanly this time, but it is a risk for the cutting script.</li>
+<li>Two small changes: the "duck" button became a rubber-duck cookie shape, and the red dot got a pinkish ring.</li>
+</ul>
+<p><strong>My advice:</strong> use <strong>low</strong> for tests and first drafts. Use <strong>medium</strong> for the final art, and when a new picture must match ducks you already have.</p>
+<div class="note"><strong>What I did not test:</strong> I made each sheet once, so colors may change from run to run. The yellow color already shows in the low faces sheet, and that sheet was the reference for four other sheets, so part of the color change may have been passed along. I did not test low sheets with the medium faces sheet as the reference, and I did not test <em>high</em> quality. My estimate for this whole test is about $0.09; I still need to check it on the OpenAI billing page.</div>
+<p><strong>A rate limit to remember:</strong> the image API allows only 5 reference pictures per minute. On Day 1 one call failed with error 429 because of this. On Day 9 I made the 3 sheets without a reference first, then the 4 sheets with a reference, and there was no error.</p>
 <footer>
   <p>Duckdoku &copy; Tetra Developers &middot; <a href="devlog.html">How it was made</a> &middot; <a href="privacy.html">Privacy Policy</a></p>
 </footer>
