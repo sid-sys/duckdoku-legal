@@ -338,6 +338,7 @@ A logo and splash sheet: on the left, a large 3D bubble-letter logo reading exac
 </ol>
 <p>If none of these help, the puzzle needs guessing, and it is thrown away.</p>
 <p><strong>3. A generator that keeps only puzzles that fit the level.</strong> Same level, same puzzle, every time. Each puzzle shows a word under the title: <em>Very easy, Easy, Medium, Hard, Expert</em>.</p>
+<div class="note"><strong>Update (Day 10):</strong> this plan changed later. From level 21 a level can have <strong>several valid answers</strong>, and the game now shows how many. The table and the "exactly one solution" line below describe the first version. See Day 10 at the end.</div>
 <p><strong>Test result, all 200 levels:</strong></p>
 <ul>
 <li>Every level has <strong>exactly one solution</strong>.</li>
@@ -456,6 +457,20 @@ A logo and splash sheet: on the left, a large 3D bubble-letter logo reading exac
 <p><strong>My advice:</strong> use <strong>low</strong> for tests and first drafts. Use <strong>medium</strong> for the final art, and when a new picture must match ducks you already have.</p>
 <div class="note"><strong>What I did not test:</strong> I made each sheet once, so colors may change from run to run. The yellow color already shows in the low faces sheet, and that sheet was the reference for four other sheets, so part of the color change may have been passed along. I did not test low sheets with the medium faces sheet as the reference, and I did not test <em>high</em> quality. My estimate for this whole test is about $0.09; I still need to check it on the OpenAI billing page.</div>
 <p><strong>A rate limit to remember:</strong> the image API allows only 5 reference pictures per minute. On Day 1 one call failed with error 429 because of this. On Day 9 I made the 3 sheets without a reference first, then the 4 sheets with a reference, and there was no error.</p>
+<h3 id="day10">Day 10: Several answers, a full-answer button, and the App Store</h3>
+<p>After the first players, I changed how levels work. These are the new rules, in plain words.</p>
+<ul>
+<li><strong>Levels 1-20 keep one answer.</strong> On a 4x4 board with a starting duck, only one layout fits, so that is on purpose. <strong>From level 21, any layout that follows the three rules wins</strong>, and every level has at least 2 answers.</li>
+<li><strong>The game shows how many answers a level has</strong> under the title (for example "3 answers"). When you open a level, a badge pops up in the middle and flies up to the title.</li>
+<li><strong>Starting ducks:</strong> levels 1-50 begin with 1 duck placed for you. Levels 51-100 begin with 0 or 1. From level 101 you start with none.</li>
+<li><strong>Full answer:</strong> you can pay 500 coins (the price of 5 hints) to see one complete answer. A level you finished this way gives 1 star.</li>
+<li><strong>A reason, not just "no".</strong> When a duck cannot go in a spot, the game now says why in plain words, for example "Row 1 and row 3 would only have column 1 left, but each needs its own column."</li>
+<li><strong>Coin rewards were balanced again</strong>, so a hint takes about 3 small levels to earn and about 1 big level.</li>
+<li><strong>Small cleanup:</strong> I removed the second intro screen, and the layout now spreads out better on tall phones.</li>
+</ul>
+<p>I also tested this the same way as before: a small program solved levels and counted the answers (for the rule above, with the starting ducks), and the game was played in the Unity Editor to look at every screen.</p>
+<h4>Duckdoku on iPhone and iPad</h4>
+<p>The iOS version is now on the <a href="https://apps.apple.com/app/id6817230321" target="_blank" rel="noopener">App Store</a>. Apple asked for the App Tracking question to come before any ad code, and I added a screenshot set in the sizes Apple needs (iPhone 6.3 inch and iPad 13 inch). A new App Store version needs a new build number every time, even if you change only the screenshots.</p>
 <footer>
   <p>Duckdoku &copy; Tetra Developers &middot; <a href="devlog.html">How it was made</a> &middot; <a href="privacy.html">Privacy Policy</a></p>
 </footer>
