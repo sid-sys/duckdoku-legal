@@ -72,7 +72,7 @@
 
 <h2>The tools</h2>
 <div class="card">
-  <p>I built the whole game inside <strong>Claude Code</strong>, Anthropic's coding assistant, talking to it like a teammate instead of writing every line myself. The model behind it was <strong>Claude Sonnet 5</strong>.</p>
+  <p>I built the whole game inside <strong>Claude Code</strong>, Anthropic's coding assistant, talking to it like a teammate instead of writing every line myself. The model behind it was <strong>Claude Sonnet 5</strong>, on the <strong>$20/month Claude plan</strong> &mdash; no extra API bill for the coding side.</p>
   <p>Claude didn't just write code in a text editor and hope it worked &mdash; it actually ran and drove the Unity Editor directly, using two things:</p>
   <ul>
     <li><strong>Unity CLI</strong> &mdash; Unity's own command-line tools, for builds and automation. <a href="https://docs.unity3d.com/Manual/CommandLineArguments.html" target="_blank" rel="noopener">docs.unity3d.com/Manual/CommandLineArguments.html</a></li>
@@ -87,10 +87,23 @@
 
 <h2>The art</h2>
 <div class="card">
+  <h3>Image cost at a glance</h3>
+  <div class="tbl-wrap"><table><tbody>
+  <tr><th>Image model</th><td><strong>GPT Image 2</strong> (<code>gpt-image-2</code>), OpenAI image API</td></tr>
+  <tr><th>Quality</th><td><strong>Medium</strong> for all final art</td></tr>
+  <tr><th>Final images</th><td>13 (7 sprite sheets, plus logo, win and lose sheets, app icon, splash screen, featured image), cut into 58 sprites</td></tr>
+  <tr><th>Total paid for images</th><td><strong>$0.85</strong> on the OpenAI dashboard (26&ndash;27 September)</td></tr>
+  </tbody></table></div>
+  <p>Breakdown of the 13 final images. Output price is real ($30 per million tokens). The reference-picture price is my estimate ($8 per million tokens), so each line is an estimate:</p>
+  <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Image</th><th>Size</th><th>Output tokens</th><th>Estimated cost</th></tr></thead><tbody>
+  <tr><td>1</td><td>Duck faces sheet</td><td>1920&times;1088</td><td>1,325</td><td>$0.041</td></tr><tr><td>2</td><td>Dance and win sheet</td><td>1920&times;1088</td><td>1,325</td><td>$0.054</td></tr><tr><td>3</td><td>Duck actions sheet</td><td>1920&times;1088</td><td>1,325</td><td>$0.053</td></tr><tr><td>4</td><td>UI kit sheet</td><td>1920&times;1088</td><td>1,325</td><td>$0.042</td></tr><tr><td>5</td><td>Streak and rewards sheet</td><td>1920&times;1088</td><td>1,325</td><td>$0.041</td></tr><tr><td>6</td><td>Avatars sheet</td><td>1920&times;1088</td><td>1,325</td><td>$0.053</td></tr><tr><td>7</td><td>Logo and splash sheet</td><td>1920&times;1088</td><td>1,325</td><td>$0.053</td></tr><tr><td>8</td><td>Logo</td><td>1536&times;640</td><td>716</td><td>$0.035</td></tr><tr><td>9</td><td>Duck win animation sheet</td><td>1920&times;1088</td><td>1,325</td><td>$0.053</td></tr><tr><td>10</td><td>Duck lose animation sheet</td><td>1920&times;1088</td><td>1,325</td><td>$0.053</td></tr><tr><td>11</td><td>App icon</td><td>1024&times;1024</td><td>1,756</td><td>$0.066</td></tr><tr><td>12</td><td>Splash screen</td><td>1088&times;1920</td><td>1,325</td><td>$0.061</td></tr><tr><td>13</td><td>Featured image</td><td>1536&times;768</td><td>916</td><td>$0.048</td></tr>
+  <tr><th></th><th>All 13</th><th></th><th></th><th>$0.65</th></tr>
+  </tbody></table></div>
+  <p>This matches the dashboard for 26 September ($0.65). The dashboard also shows about $0.20 on 27 September that is not in my own log, so I cannot break it down. The later low-quality test (see below) cost about $0.09 more by my estimate. Only image costs are shown here; the coding was covered by the flat $20/month plan.</p>
   <p>For the duck characters, icons, and store art, I gave Claude my own OpenAI API key. Claude generated the images as <strong>sprite sheets</strong> &mdash; several poses or frames in one image, cheaper than generating each one separately &mdash; and then cut each sheet into the individual sprite images the game actually uses.</p>
   <img class="shot" src="asset_generation.png" alt="Contact sheet of generated duck sprite sheets, before being cut into individual sprites">
   <p class="shot-cap">The generated sprite sheets, before Claude cut them into individual images</p>
-  <p>Every image was made with OpenAI's image generation API. Before generating anything, Claude estimated the cost first and got my go-ahead. Total real spend on art for this project, checked directly on the OpenAI usage dashboard:</p>
+  <p>Every image was made with OpenAI's image generation API. Before generating anything, Claude estimated the cost first and got my go-ahead. The dashboard total for image generation:</p>
   <img class="shot" src="openai_cost.png" alt="OpenAI usage dashboard showing total spend for image generation">
   <p class="shot-cap">OpenAI usage dashboard &mdash; total image generation spend</p>
 </div>
